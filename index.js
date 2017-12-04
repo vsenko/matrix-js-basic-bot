@@ -54,6 +54,7 @@ class BasicMatrixBot extends EventEmitter {
     this.clientOptions = {
       baseUrl: url,
       sessionStore: new sdk.WebStorageSessionStore(this.localStorage),
+      timelineSupport: true,
     };
 
     // Parse options
@@ -113,18 +114,22 @@ class BasicMatrixBot extends EventEmitter {
     await this.matrixClient.initCrypto();
     this.matrixClient.startClient();
 
-    this.matrixClient.on('sync', (state, prevState, data) => {
+    const checkSyncState = (state, prevState, data) => {
       switch (state) {
         case 'PREPARED':
           this.setupAutomaticActions();
+          this.matrixClient.removeListener('sync', checkSyncState);
           this.emit('connected');
           break;
         case 'ERROR':
+          this.matrixClient.removeListener('sync', checkSyncState);
           this.emit('error', data.err);
           break;
         default:
       }
-    });
+    };
+
+    this.matrixClient.on('sync', checkSyncState);
   }
 
   /**
@@ -384,6 +389,25 @@ class BasicMatrixBot extends EventEmitter {
    * @returns {object[]} - array of known rooms represented as room objects
    */
   async listKnownRooms() {
+    await this.matrixClient.syncLeftRooms();
+
+    // Best currently known way to get rid of stale rooms in storage
+    let gotError;
+    do {
+      gotError = false;
+
+      const rooms = this.matrixClient.getRooms();
+      for (const room of rooms) {
+        try {
+          await this.matrixClient.roomState(room.roomId);
+        } catch (error) {
+          await this.matrixClient.forget(room.roomId);
+          gotError = true;
+        }
+      }
+
+    } while (gotError);
+
     return this.matrixClient.getRooms();
   }
 
