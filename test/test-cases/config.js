@@ -8,6 +8,7 @@ module.exports = {
   botBId: process.env['BOTBID'] || 'botB',
   botBPass: process.env['BOTBPASS'] || 'somepass',
   botBStorage: process.env['BOTBSTORAGE'] || './tempB',
-  postTestCaseTimeout: process.env['POSTTESTCASETIMEOUT'] || 1500,
+  postTestCaseTimeout: 15000,
+  postTestTimeout: 5000,
   mochaTimeout: 60000,
 };

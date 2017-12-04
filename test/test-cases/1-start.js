@@ -8,6 +8,12 @@ describe('startup test', function suite() {
   let botA;
   let botB;
 
+  afterEach(async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, config.postTestTimeout);
+    });
+  });
+
   it('bots should start', async () => {
     botA = new BasicMatrixBot(
       config.botAId,
@@ -46,19 +52,10 @@ describe('startup test', function suite() {
     await botB.start();
 
     await connectedBPromise;
-
-    // Give them some time to spin up
-    await new Promise((resolve) => {
-      setTimeout(resolve, 15000);
-    });
   });
 
   it('bots should stop', async () => {
     botA.stop();
     botB.stop();
-
-    await new Promise((resolve) => {
-      setTimeout(resolve, config.postTestCaseTimeout);
-    });
   });
 });

@@ -12,6 +12,12 @@ describe('messaging', function suite() {
   let roomId;
   const messageBody = 'abcdefg!';
 
+  afterEach(async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, config.postTestTimeout);
+    });
+  });
+
   before(async () => {
     botA = new BasicMatrixBot(
       config.botAId,
@@ -55,11 +61,19 @@ describe('messaging', function suite() {
     await botB.start();
     await botBConnectedPromise;
 
+    await new Promise((resolve) => {
+      setTimeout(resolve, config.postTestTimeout);
+    });
+
     const room = await botA.createRoom({
       visibility: 'private',
       name: 'test room',
     });
     roomId = room['room_id']; // eslint-disable-line dot-notation
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, config.postTestTimeout);
+    });
 
     await botA.inviteUserToRoom(botB.clientOptions.userId, roomId);
   });
@@ -72,10 +86,6 @@ describe('messaging', function suite() {
 
     botA.stop();
     botB.stop();
-
-    await new Promise((resolve) => {
-      setTimeout(resolve, config.postTestCaseTimeout);
-    });
   });
 
   it('notice', async () => {

@@ -11,6 +11,12 @@ describe('room membership test with `automaticallyJoinRooms: true`', function su
   let botB;
   let roomId;
 
+  afterEach(async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, config.postTestTimeout);
+    });
+  });
+
   before(async () => {
     botA = new BasicMatrixBot(
       config.botAId,
@@ -79,7 +85,9 @@ describe('room membership test with `automaticallyJoinRooms: true`', function su
       visibility: 'private',
       name: 'test room',
     });
+  });
 
+  it('verify membership', async () => {
     const knownRooms = await botA.listKnownRooms();
     assert.strictEqual(knownRooms.length, 1);
     ([{ roomId }] = knownRooms);
@@ -114,13 +122,17 @@ describe('room membership test with `automaticallyJoinRooms: true`', function su
     for (const room of knownRooms) { // eslint-disable-line no-restricted-syntax
       await botA.leaveRoom(room.roomId);
     }
-    knownRooms = await botA.listKnownRooms();
-    assert.strictEqual(knownRooms.length, 0);
 
     knownRooms = await botB.listKnownRooms();
     for (const room of knownRooms) { // eslint-disable-line no-restricted-syntax
       await botB.leaveRoom(room.roomId);
     }
+  });
+
+  it('verify membership', async () => {
+    let knownRooms = await botA.listKnownRooms();
+    assert.strictEqual(knownRooms.length, 0);
+
     knownRooms = await botB.listKnownRooms();
     assert.strictEqual(knownRooms.length, 0);
   });
