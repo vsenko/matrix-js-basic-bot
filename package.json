@@ -1,6 +1,6 @@
 {
   "name": "matrix-js-basic-bot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A basic bot for matrix.org",
   "main": "index.js",
   "scripts": {
