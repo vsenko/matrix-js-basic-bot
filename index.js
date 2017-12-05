@@ -397,7 +397,7 @@ class BasicMatrixBot extends EventEmitter {
       gotError = false;
 
       const rooms = this.matrixClient.getRooms();
-      for (const room of rooms) {
+      for (const room of rooms) { // eslint-disable-line no-restricted-syntax
         try {
           await this.matrixClient.roomState(room.roomId);
         } catch (error) {
@@ -405,7 +405,6 @@ class BasicMatrixBot extends EventEmitter {
           gotError = true;
         }
       }
-
     } while (gotError);
 
     return this.matrixClient.getRooms();

@@ -129,7 +129,7 @@ describe('room membership test with `automaticallyLeaveRooms: true`', function s
       });
     });
 
-    let knownRooms = await botA.listKnownRooms();
+    const knownRooms = await botA.listKnownRooms();
     for (const room of knownRooms) { // eslint-disable-line no-restricted-syntax
       await botA.leaveRoom(room.roomId);
     }
