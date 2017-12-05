@@ -21,7 +21,7 @@ const authorisedSenders = [
 async function onMessage(content, sender) {
   try {
     const output = 'I prefer private conversations, please enable *e2e encryption* in this room.';
-    await this.sendHtmlNotice(sender.roomId, output, md.render(output));
+    await this.sendNotice(sender.roomId, output, md.render(output));
   } catch (error) {
     console.log(error);
   }
@@ -46,7 +46,7 @@ async function onE2eMessage(content, sender) {
       output = `**${error.toString()}**`;
     }
 
-    await this.sendHtmlNotice(sender.roomId, output, md.render(output));
+    await this.sendNotice(sender.roomId, output, md.render(output));
   } catch (error) {
     console.log(error);
   }
