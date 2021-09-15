@@ -1,5 +1,7 @@
 # matrix-js-basic-bot
 
+**Note: this code is outdated and, probably, broken!**
+
 [![Build Status](https://travis-ci.org/vsenko/matrix-js-basic-bot.svg?branch=master)](https://travis-ci.org/vsenko/matrix-js-basic-bot)
 
 A basic bot for matrix.org
